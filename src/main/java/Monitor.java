@@ -5,13 +5,14 @@ import org.apache.log4j.Logger;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Monitor {
     protected static final Logger LOGGER = LogManager.getLogger(Monitor.class);
 
     private static void findFile(String fileNamePrefix) throws IOException {
-        Path currentDir = Path.of("C:\\task4\\input");
-        Path target = Path.of("C:\\task4\\incorrect_input");
+        Path currentDir = Paths.get("C:\\task4\\input");
+        Path target = Paths.get("C:\\task4\\incorrect_input");
         Files.walk(currentDir).forEach(child -> {
             {
                 try {

@@ -7,6 +7,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 public class ConnectionPool {
+    static final String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
+    static final String USER = "postgres";
+    static final String PASS = "admin";
     private static final ConnectionPool instance = new ConnectionPool();
 
     private final BlockingQueue<Connection> pool = new ArrayBlockingQueue<>(5);
@@ -16,25 +19,24 @@ public class ConnectionPool {
         Connection con = null;
 
         try {
-            java.sql.DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-            System.out.println("");
-        } catch (SQLException e) {
-
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("PostgreSQL JDBC Driver is not found. Include it in your library path ");
             e.printStackTrace();
+            return;
         }
 
-        try {
-
-            for (int i = 1; i <= pool.remainingCapacity(); i++) {
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/notebook?useSSL=false", "root",
-                        "admin");
+            try {
+                con= DriverManager
+                        .getConnection(DB_URL, USER, PASS);
                 pool.add(con);
+            } catch (SQLException e) {
+                System.out.println("Connection Failed");
+                e.printStackTrace();
+                return;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-    }
+        }
 
     public Connection getConnection() throws InterruptedException {
         return pool.take();
