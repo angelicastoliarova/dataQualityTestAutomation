@@ -66,7 +66,6 @@ public class Monitor {
                 whitespaceCount += countWord - 1;
 
                 String[] sentenceList = line.split("[!?.:]+");
-
                 sentenceCount += sentenceList.length;
             }
         }
