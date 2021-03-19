@@ -2,10 +2,13 @@ package services;
 
 import dto.Book;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DbService {
-    public static void addData(Book book, int bookID) {
+    public static void addData(Book book) {
 
         Connection con = null;
         Statement st = null;
@@ -45,7 +48,6 @@ public class DbService {
             } catch (InterruptedException e) {
             }
         }
-
     }
 }
 

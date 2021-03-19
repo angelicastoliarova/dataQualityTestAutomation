@@ -76,7 +76,7 @@ public class Monitor {
                 .setCharacterCount(characterCount)
                 .setParagraphCount(paragraphCount)
                 .setWhitespaceCount(whitespaceCount);
-        services.DbService.addData(book, 1);
+        services.DbService.addData(book);
 
         LOGGER.info("Total word count = " + countWord);
         LOGGER.info("Total number of sentences = " + sentenceCount);

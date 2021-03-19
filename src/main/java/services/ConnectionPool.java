@@ -26,17 +26,17 @@ public class ConnectionPool {
             return;
         }
 
-            try {
-                con= DriverManager
-                        .getConnection(DB_URL, USER, PASS);
-                pool.add(con);
-            } catch (SQLException e) {
-                System.out.println("Connection Failed");
-                e.printStackTrace();
-                return;
-            }
-
+        try {
+            con = DriverManager
+                    .getConnection(DB_URL, USER, PASS);
+            pool.add(con);
+        } catch (SQLException e) {
+            System.out.println("Connection Failed");
+            e.printStackTrace();
+            return;
         }
+
+    }
 
     public Connection getConnection() throws InterruptedException {
         return pool.take();
