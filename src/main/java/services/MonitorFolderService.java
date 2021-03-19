@@ -1,3 +1,5 @@
+package services;
+
 import dto.Book;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -8,26 +10,28 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
-public class Monitor {
-    private static final Logger LOGGER = LogManager.getLogger(Monitor.class);
+public class MonitorFolderService {
+    protected static final Logger LOGGER = LogManager.getLogger(MonitorFolderService.class);
 
-    private static void findFile(String fileNamePrefix) throws IOException {
+    public static void monitorSourseDirForFile(String fileNamePrefix) throws IOException {
         Properties property = new Properties();
         FileInputStream fileProperty = new FileInputStream("src/main/resources/test.properties");
         property.load(fileProperty);
-        Path currentDir = Paths.get(property.getProperty("sourceDir"));
-        Path targetDir = Paths.get(property.getProperty("targetDir"));
-        Files.walk(currentDir).forEach(child -> {
+        Path sourceDir = Paths.get(property.getProperty("sourceDir"));
+        Path dirForOtherFiles = Paths.get(property.getProperty("targetDir"));
+        Files.walk(sourceDir).forEach(child -> {
             {
                 try {
-                    Files.walk(currentDir)
+                    Files.walk(sourceDir)
                             .forEach(source -> {
                                 try {
                                     if (source.getFileName().toString().endsWith(fileNamePrefix)) {
                                         System.out.println(source.getFileName().toString());
-                                        readFile(source.toString());
+                                        parseFileWriteDataToDb(source.toString());
+                                        LOGGER.info("Read file with prefix " + fileNamePrefix);
                                     } else
-                                        Files.move(source, targetDir.resolve(currentDir.relativize(source)));
+                                        Files.move(source, dirForOtherFiles.resolve(sourceDir.relativize(source)));
+                                    LOGGER.info("Files except prefix " + fileNamePrefix+"mooved to"+dirForOtherFiles);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -39,7 +43,7 @@ public class Monitor {
         });
     }
 
-    public static void readFile(String fileName) throws IOException {
+    protected static void parseFileWriteDataToDb(String fileName) throws IOException {
 
         File file = new File(fileName);
         FileInputStream fileStream = new FileInputStream(file);
@@ -75,7 +79,7 @@ public class Monitor {
                 .setCharacterCount(characterCount)
                 .setParagraphCount(paragraphCount)
                 .setWhitespaceCount(whitespaceCount);
-        services.DbService.addData(book);
+        DbService.addData(book);
 
         LOGGER.info("Total word count = " + countWord);
         LOGGER.info("Total number of sentences = " + sentenceCount);
@@ -85,7 +89,7 @@ public class Monitor {
 
     }
 
-    public static void main(String[] args) throws IOException {
-        findFile(".fb2");
+    protected static void main(String[] args) throws IOException {
+        monitorSourseDirForFile(".fb2");
     }
 }

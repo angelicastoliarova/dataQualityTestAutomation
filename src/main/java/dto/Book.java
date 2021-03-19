@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Data
 public class Book {
+    private int bookId;
     private int totalWordCount;
     private int sentenceCount;
     private int characterCount;
