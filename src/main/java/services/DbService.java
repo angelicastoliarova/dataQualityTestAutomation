@@ -13,7 +13,7 @@ public class DbService {
 
             con = ConnectionPool.getInstance().getConnection();
             st = con.createStatement();
-            String sql = "INSERT INTO task4 (totalWordCount, paragraphCount, characterCount,whitespaceCount,sentenceCount) Values (?,?,?,?,?)";
+            String sql = "INSERT INTO book (total_word_count, paragraph_count, character_count,whitespace_count,sentence_count) Values (?,?,?,?,?)";
             PreparedStatement preparedStatement = con.prepareStatement(sql);
             preparedStatement.setInt(1, book.getTotalWordCount());
             preparedStatement.setInt(2, book.getParagraphCount());

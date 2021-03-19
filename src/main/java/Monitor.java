@@ -6,13 +6,17 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Properties;
 
 public class Monitor {
-    protected static final Logger LOGGER = LogManager.getLogger(Monitor.class);
+    private static final Logger LOGGER = LogManager.getLogger(Monitor.class);
 
     private static void findFile(String fileNamePrefix) throws IOException {
-        Path currentDir = Paths.get("C:\\task4\\input");
-        Path target = Paths.get("C:\\task4\\incorrect_input");
+        Properties property = new Properties();
+        FileInputStream fileProperty = new FileInputStream("src/main/resources/test.properties");
+        property.load(fileProperty);
+        Path currentDir = Paths.get(property.getProperty("sourceDir"));
+        Path targetDir = Paths.get(property.getProperty("targetDir"));
         Files.walk(currentDir).forEach(child -> {
             {
                 try {
@@ -23,7 +27,7 @@ public class Monitor {
                                         System.out.println(source.getFileName().toString());
                                         readFile(source.toString());
                                     } else
-                                        Files.move(source, target.resolve(currentDir.relativize(source)));
+                                        Files.move(source, targetDir.resolve(currentDir.relativize(source)));
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -56,13 +60,11 @@ public class Monitor {
             } else {
                 characterCount += line.length();
 
-                // \\s+ is the space delimiter in java
                 String[] wordList = line.split("\\s+");
 
                 countWord += wordList.length;
                 whitespaceCount += countWord - 1;
 
-                // [!?.:]+ is the sentence delimiter in java
                 String[] sentenceList = line.split("[!?.:]+");
 
                 sentenceCount += sentenceList.length;
